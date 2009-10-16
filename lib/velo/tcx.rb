@@ -5,7 +5,7 @@ require "rubygems"
 
 require "velo/activity"
 require "velo/device"
-require "velo/lap"
+require "velo/part"
 require "velo/trackpoint"
 
 
@@ -20,7 +20,7 @@ module Velo
       a.device = Device.from_tcx activity.css("Creator")
 
       activity.css("Lap").each {|lap|
-        a.laps << Lap.from_tcx(lap)
+        a.parts << Part.from_tcx(lap)
       }
 
       a
@@ -44,26 +44,26 @@ module Velo
     end
   end
 
-  class Lap
-    def self.from_tcx(lap)
+  class Part
+    def self.from_tcx(part)
       l = new
 
-      l.start_time = Time.parse lap["StartTime"]
-      l.trigger = lap.css("TriggerMethod").text
-      l.intensity = lap.css("Intensity").text
-      l.duration = lap.css("TotalTimeSeconds").text.to_f
-      l.distance = lap.css("DistanceMeters").text.to_f
-      l.calories = lap.css("Calories").text.to_f
-      l.speed_max = lap.css("MaximumSpeed").text.to_f
-      l.hr_average = lap.css("AverageHeartRateBpm").text.to_i
-      l.hr_max = lap.css("MaximumHeartRateBpm").text.to_i
+      l.start_time = Time.parse part["StartTime"]
+      l.trigger = part.css("TriggerMethod").text
+      l.intensity = part.css("Intensity").text
+      l.duration = part.css("TotalTimeSeconds").text.to_f
+      l.distance = part.css("DistanceMeters").text.to_f
+      l.calories = part.css("Calories").text.to_i
+      l.speed_max = part.css("MaximumSpeed").text.to_f
+      l.hr_average = part.css("AverageHeartRateBpm").text.to_i
+      l.hr_max = part.css("MaximumHeartRateBpm").text.to_i
 
       # O.M.G.
-      l.cadence_average = lap.children.each {|c| break c.text if c.name == "Cadence" }
+      l.cadence_average = part.children.each {|c| break c.text if c.name == "Cadence" }
 
-      l.watts_average = lap.css("Extensions").children.first.children.text.to_i
+      l.watts_average = part.css("Extensions").children.first.children.text.to_i
 
-      lap.css("Track Trackpoint").each {|point|
+      part.css("Track Trackpoint").each {|point|
         l.trackpoints << TrackPoint.from_tcx(point)
       }
 

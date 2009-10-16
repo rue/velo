@@ -4,4 +4,4 @@ require "lib/velo/tcx"
 $xml = File.open(ARGV.first) {|f| Nokogiri::XML.parse f }
 $a = Velo::Activity.from_tcx $xml.css("Activity").first
 
-p $a, $a.laps.first, $a.laps.first.trackpoints.first
+p $a, $a.parts.first, $a.parts.first.trackpoints.first

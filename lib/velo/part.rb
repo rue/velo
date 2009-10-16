@@ -3,7 +3,7 @@ require "velo/trackpoint"
 
 module Velo
 
-  class Lap
+  class Part
 
     ATTRIBUTES =  :start_time, :trigger, :duration, :distance,
                   :speed_max, :calories, :hr_average, :hr_max,
@@ -18,7 +18,7 @@ module Velo
     end
 
     def inspect()
-      s = "#<Lap: "
+      s = "#<Part: "
 
       ATTRIBUTES.each {|k| s << "#{k}: #{send k} " unless k == :trackpoints }
 
